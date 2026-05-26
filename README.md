@@ -97,7 +97,7 @@ Real-Time Feedback
 ## Installation
 
 ```bash
-git clone https://github.com/yourusername/PhysioPose.git
+git clone https://github.com/Kanishk-Kaushal/PhysioPose.git
 cd PhysioPose
 pip install -r requirements.txt
 ```
