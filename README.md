@@ -4,125 +4,133 @@ AI-Based Rehabilitation Exercise Monitoring using Webcam
 
 ---
 
-## Overview
+# Overview
 
-PhysioPose is a computer vision and AI-based system that monitors rehabilitation exercises through a webcam and provides real-time posture correction feedback. The system helps users perform physiotherapy exercises accurately at home by analyzing body movements and detecting incorrect form.
+PhysioPose is an AI-powered rehabilitation exercise monitoring system that uses a standard webcam to analyze human body posture and movement in real time.
 
-The project uses pose estimation techniques to extract body landmarks and applies machine learning methods to classify exercises and evaluate movement quality.
+The system helps users perform physiotherapy exercises correctly at home by:
+- Detecting body landmarks
+- Tracking exercise motion
+- Counting repetitions
+- Evaluating posture correctness
+- Providing real-time corrective feedback
 
----
-
-## Features
-
-- Real-time webcam-based monitoring
-- Human pose estimation using body keypoints
-- Exercise classification
-- Joint angle analysis
-- Incorrect posture detection
-- Repetition counting
-- Real-time corrective feedback
-- Lightweight and accessible system
-- No wearable sensors required
+The project uses computer vision and machine learning techniques to make rehabilitation more accessible and affordable without requiring wearable sensors or special hardware.
 
 ---
 
-## Proposed Pipeline
+# Features
 
-1. Capture webcam video
-2. Detect body landmarks using pose estimation
-3. Track movement and joint angles
-4. Classify rehabilitation exercise
-5. Detect posture errors or incomplete movement
-6. Display live feedback and repetition count
+- Real-time webcam pose estimation
+- Human skeleton tracking
+- Joint angle calculation
+- Exercise repetition counting
+- Posture correction feedback
+- Multiple rehabilitation exercises
+- Lightweight webcam-only setup
 
 ---
 
-## Technologies Used
+# Tech Stack
 
-### Computer Vision
+## Computer Vision
 - OpenCV
 - MediaPipe Pose
 
-### Machine Learning
+## Machine Learning
 - NumPy
 - Scikit-learn
-- LSTM / Sequence Models
 
-### Programming Language
-- Python
-
-### Visualization
-- Matplotlib
+## Language
+- Python 3.10
 
 ---
 
-## Example Exercises
+# Recommended Environment
 
-- Squats
-- Arm Raises
-- Knee Rehabilitation
-- Shoulder Mobility Exercises
-- Leg Raises
+- Ubuntu 22.04 (Recommended)
+- Windows 10/11
+- macOS
 
 ---
 
-## System Architecture
+# Installation
 
-Webcam Input  
-↓  
-Pose Estimation  
-↓  
-Landmark Extraction  
-↓  
-Exercise Classification  
-↓  
-Posture Analysis  
-↓  
-Real-Time Feedback
-
----
-
-## Future Improvements
-
-- Personalized rehabilitation plans
-- Mobile application support
-- Cloud-based patient monitoring
-- Physiotherapist dashboard
-- Exercise quality scoring system
-- Multi-exercise support
-- Voice feedback assistance
-
----
-
-## Installation
+## 1. Clone the Repository
 
 ```bash
 git clone https://github.com/Kanishk-Kaushal/PhysioPose.git
 cd PhysioPose
+```
+
+---
+
+## 2. Create Virtual Environment
+
+### Linux/macOS
+
+```bash
+python3.10 -m venv venv
+source venv/bin/activate
+```
+
+### Windows
+
+```bash
+python -m venv venv
+venv\Scripts\activate
+```
+
+---
+
+## 3. Install Dependencies
+
+```bash
 pip install -r requirements.txt
 ```
 
 ---
 
-## Run the Project
+# Dependency Test
+
+To verify all dependencies are installed correctly:
+
+```bash
+python dependency_test.py
+```
+
+If everything is installed correctly, the script should run without errors.
+
+---
+
+# Run the Project (TBD)
 
 ```bash
 python main.py
 ```
 
+Press:
+```text
+q
+```
+
+to quit the webcam window.
+
 ---
 
-## Folder Structure
+# Project Structure
 
 ```bash
 PhysioPose/
 │
-├── data/
+├── venv/
+├── datasets/
 ├── models/
 ├── pose_estimation/
-├── exercise_classifier/
 ├── posture_analysis/
+├── ui/
 ├── utils/
+├── dependency_test.py
 ├── main.py
 ├── requirements.txt
 └── README.md
@@ -130,31 +138,40 @@ PhysioPose/
 
 ---
 
-## Applications
+# Current Progress
 
-- Home physiotherapy
-- Sports rehabilitation
-- Elderly mobility assistance
-- Post-surgery recovery monitoring
-- AI-assisted healthcare systems
-
----
-
-## Motivation
-
-Many rehabilitation patients perform exercises incorrectly while practicing at home without supervision. Incorrect posture can slow recovery or lead to further injury. PhysioPose aims to provide an affordable and accessible AI-powered rehabilitation assistant using only a webcam.
+- [x] GitHub repository setup
+- [x] Python virtual environment setup
+- [x] Webcam pipeline
+- [ ] Pose estimation
+- [ ] Joint angle calculation
+- [ ] Squat detection
+- [ ] Rep counting
+- [ ] Posture feedback system
+- [ ] Machine learning integration
 
 ---
 
-## Authors
+# Future Improvements
+
+- LSTM-based motion analysis
+- Personalized rehabilitation plans
+- Mobile application
+- Cloud-based monitoring
+- Physiotherapist dashboard
+- Voice feedback assistance
+
+---
+
+# Authors
 
 - Kanishk Kaushal
 - Kaushal Jha
 
 ---
 
-## References
+# References
 
 - MediaPipe Pose — Google
 - OpenPose — CMU
-- Artificial Intelligence and Machine Learning in Rehabilitation, npj Digital Medicine, 2020
+- Artificial Intelligence and Machine Learning in Rehabilitation (npj Digital Medicine, 2020)
