@@ -103,7 +103,7 @@ If everything is installed correctly, the script should run without errors.
 
 ---
 
-# Run the Project (TBD)
+# Run the Project (Runs pose estimation for now)
 
 ```bash
 python main.py
@@ -143,7 +143,7 @@ PhysioPose/
 - [x] GitHub repository setup
 - [x] Python virtual environment setup
 - [x] Webcam pipeline
-- [ ] Pose estimation
+- [x] Pose estimation
 - [ ] Joint angle calculation
 - [ ] Squat detection
 - [ ] Rep counting
