@@ -116,8 +116,12 @@ def extract_squat_features(landmarks):
     spine_angle = vertical_angle(mid_hip, mid_shoulder)
     torso_lean = spine_angle
 
-    left_knee_lateral = round(abs(left_knee[0] - left_ankle[0]), 2)
-    right_knee_lateral = round(abs(right_knee[0] - right_ankle[0]), 2)
+    body_width = abs(left_hip[0] - right_hip[0])
+    if body_width == 0:
+        body_width = 1
+
+    left_knee_lateral = round(abs(left_knee[0] - left_ankle[0]) / body_width, 2)
+    right_knee_lateral = round(abs(right_knee[0] - right_ankle[0]) / body_width, 2)
 
     symmetry_score = round(
         abs(left_knee_angle - right_knee_angle)
@@ -126,7 +130,7 @@ def extract_squat_features(landmarks):
         2,
     )
 
-    hip_depth = round(mid_hip[1], 2)
+    hip_depth = round(mid_hip[1] / 480, 2)
 
     return {
         "left_knee_angle": left_knee_angle,

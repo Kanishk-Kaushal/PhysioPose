@@ -35,7 +35,8 @@ class SquatClassifier:
         confidence = max(probabilities)
 
         return {
-            "label": int(prediction),
-            "description": self.label_map[int(prediction)],
-            "confidence": float(confidence),
-        }
+        "label": int(prediction),
+        "description": self.label_map[int(prediction)],
+        "confidence": float(confidence),
+        "probabilities": probabilities,
+    }
