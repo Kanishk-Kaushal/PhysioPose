@@ -1,6 +1,7 @@
 import cv2
 from pose_estimation.pose_detector import PoseDetector
 from utils.fps_utils import FPSCounter
+from utils.angle_utils import extract_squat_features
 
 
 def main():
@@ -23,6 +24,35 @@ def main():
         frame, results = detector.detect_pose(frame, draw=True)
         landmarks = detector.get_landmarks(results, frame.shape)
 
+        features = extract_squat_features(landmarks)
+        
+        if features:
+            y = 120
+
+            for key, value in features.items():
+                cv2.putText(
+                    frame,
+                    f"{key}: {value}",
+                    (20, y),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    0.55,
+                    (255, 255, 0),
+                    2,
+                )
+                y += 25
+
+        else:
+            cv2.putText(
+                frame,
+                "Show full body for squat feature extraction",
+                (20, 120),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.7,
+                (0, 0, 255),
+                2,
+            )
+
+        
         fps = fps_counter.get_fps()
 
         cv2.putText(
