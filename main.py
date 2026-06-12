@@ -1,7 +1,7 @@
 import cv2
 from pose_estimation.pose_detector import PoseDetector
 from utils.fps_utils import FPSCounter
-from utils.angle_utils import extract_squat_features
+from utils.angle_utils import extract_squat_features_sideview
 from ml.predict_squat import SquatClassifier
 
 import warnings
@@ -28,14 +28,14 @@ def main():
         frame, results = detector.detect_pose(frame, draw=True)
         landmarks = detector.get_landmarks(results, frame.shape)
 
-        features = extract_squat_features(landmarks)
+        # Side-view: features come from the camera-facing leg only. Stand
+        # side-on to the camera so one side stays clearly visible.
+        features = extract_squat_features_sideview(landmarks, min_visibility=0.2)
 
         if features:
-            avg_knee_angle = (
-                features["left_knee_angle"] + features["right_knee_angle"]
-            ) / 2
+            knee_angle = features["knee_angle"]
 
-            if avg_knee_angle < 160:
+            if knee_angle < 160:
                 prediction = classifier.predict(features)
 
                 label_text = prediction["description"]

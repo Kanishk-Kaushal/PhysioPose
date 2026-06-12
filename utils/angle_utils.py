@@ -32,6 +32,60 @@ def get_landmark_point(landmarks, landmark_id, min_visibility=0.6):
     return None
 
 
+def get_landmark_vis(landmarks, landmark_id):
+    """Return ((x, y), visibility) for a landmark, or (None, 0.0) if absent."""
+    for landmark in landmarks:
+        if landmark["id"] == landmark_id:
+            return (landmark["x"], landmark["y"]), landmark["visibility"]
+    return None, 0.0
+
+
+def extract_squat_features_sideview(landmarks, min_visibility=0.2):
+    """
+    Side-view squat features computed from the camera-facing leg only.
+
+    In a profile view MediaPipe can see one side of the body reliably and only
+    *estimates* the occluded far side, so bilateral features (and especially the
+    far-side ankle/foot) are noise. Here we pick whichever side has the higher
+    landmark visibility and derive single-leg angles from it. Shoulder/hip are
+    near-frontal and stay reliable, so spine lean uses the chosen side too.
+
+    All features are angles -> resolution-invariant and view-consistent.
+    """
+    ids = {
+        "L": {"sho": 11, "hip": 23, "knee": 25, "ankle": 27, "foot": 31},
+        "R": {"sho": 12, "hip": 24, "knee": 26, "ankle": 28, "foot": 32},
+    }
+
+    pts = {}
+    score = {"L": 0.0, "R": 0.0}
+    for side, joint_ids in ids.items():
+        for joint, lid in joint_ids.items():
+            pt, vis = get_landmark_vis(landmarks, lid)
+            pts[(side, joint)] = pt
+            score[side] += vis
+
+    side = "L" if score["L"] >= score["R"] else "R"
+
+    needed = [pts[(side, j)] for j in ("sho", "hip", "knee", "ankle", "foot")]
+    if any(p is None for p in needed):
+        return None
+
+    sho, hip, knee, ankle, foot = needed
+
+    knee_angle = calculate_angle(hip, knee, ankle)
+    hip_angle = calculate_angle(sho, hip, knee)
+    ankle_angle = calculate_angle(knee, ankle, foot)
+    spine_angle = vertical_angle(hip, sho)
+
+    return {
+        "knee_angle": knee_angle,
+        "hip_angle": hip_angle,
+        "ankle_angle": ankle_angle,
+        "spine_angle": spine_angle,
+    }
+
+
 def vertical_angle(point_a, point_b):
     """
     Angle of line AB relative to vertical axis.
@@ -50,7 +104,9 @@ def vertical_angle(point_a, point_b):
     return round(angle, 2)
 
 
-def extract_squat_features(landmarks):
+def extract_squat_features(landmarks, min_visibility=0.6):
+    # min_visibility: lower it (e.g. 0.3) for side-view input, where the
+    # far-side limbs are partly occluded and report reduced visibility.
     # MediaPipe landmark IDs
     LEFT_SHOULDER = 11
     RIGHT_SHOULDER = 12
@@ -63,20 +119,20 @@ def extract_squat_features(landmarks):
     LEFT_FOOT_INDEX = 31
     RIGHT_FOOT_INDEX = 32
 
-    left_shoulder = get_landmark_point(landmarks, LEFT_SHOULDER)
-    right_shoulder = get_landmark_point(landmarks, RIGHT_SHOULDER)
+    left_shoulder = get_landmark_point(landmarks, LEFT_SHOULDER, min_visibility)
+    right_shoulder = get_landmark_point(landmarks, RIGHT_SHOULDER, min_visibility)
 
-    left_hip = get_landmark_point(landmarks, LEFT_HIP)
-    right_hip = get_landmark_point(landmarks, RIGHT_HIP)
+    left_hip = get_landmark_point(landmarks, LEFT_HIP, min_visibility)
+    right_hip = get_landmark_point(landmarks, RIGHT_HIP, min_visibility)
 
-    left_knee = get_landmark_point(landmarks, LEFT_KNEE)
-    right_knee = get_landmark_point(landmarks, RIGHT_KNEE)
+    left_knee = get_landmark_point(landmarks, LEFT_KNEE, min_visibility)
+    right_knee = get_landmark_point(landmarks, RIGHT_KNEE, min_visibility)
 
-    left_ankle = get_landmark_point(landmarks, LEFT_ANKLE)
-    right_ankle = get_landmark_point(landmarks, RIGHT_ANKLE)
+    left_ankle = get_landmark_point(landmarks, LEFT_ANKLE, min_visibility)
+    right_ankle = get_landmark_point(landmarks, RIGHT_ANKLE, min_visibility)
 
-    left_foot = get_landmark_point(landmarks, LEFT_FOOT_INDEX)
-    right_foot = get_landmark_point(landmarks, RIGHT_FOOT_INDEX)
+    left_foot = get_landmark_point(landmarks, LEFT_FOOT_INDEX, min_visibility)
+    right_foot = get_landmark_point(landmarks, RIGHT_FOOT_INDEX, min_visibility)
 
     required = [
         left_shoulder,
